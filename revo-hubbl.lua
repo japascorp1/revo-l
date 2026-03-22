@@ -3,6 +3,9 @@ local LoadingTick = os.clock()
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zanerBRUH/UwU-Ware/refs/heads/main/Libraries/Kiwisense.lua"))()
 
+-- Muda o tema principal (azul → vermelho) ANTES de criar a UI
+Library.Theme.Accent = Color3.fromRGB(220, 20, 60)   -- vermelho principal (muda toggles, ícones, highlights, etc.)
+
 -- Services
 local Players = game:GetService("Players")
 local VirtualInput = game:GetService("VirtualInputManager")
@@ -23,7 +26,7 @@ local pvpRunning = false
 local infiniteJumpEnabled = false
 local infiniteJumpConn = nil
 
--- Funções
+-- Funções (sem mudanças)
 local function Teleport(target)
     local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
     if not root then return end
@@ -68,13 +71,11 @@ end
 local function doCycle()
     if not pvpRunning then return end
 
-    -- Pega valores reais dos FLAGS (mais confiável que :Get() em algumas versões)
     HOLD_E_TIME = tonumber(Library.Flags["holdESlider"]) or 5
     WAIT_MAIN   = tonumber(Library.Flags["waitMainSlider"]) or 25
     WAIT_ALT    = tonumber(Library.Flags["waitAltSlider"]) or 25
 
-    -- Debug: evita NaN
-    if HOLD_E_TIME ~= HOLD_E_TIME then HOLD_E_TIME = 5 end  -- se for NaN
+    if HOLD_E_TIME ~= HOLD_E_TIME then HOLD_E_TIME = 5 end
     if WAIT_MAIN   ~= WAIT_MAIN   then WAIT_MAIN   = 25 end
     if WAIT_ALT    ~= WAIT_ALT    then WAIT_ALT    = 25 end
 
@@ -102,7 +103,7 @@ local function togglePVP(state)
     if state then task.spawn(doCycle) end
 end
 
--- UI
+-- UI (agora com vermelho)
 local Window = Library:Window({
     Name = "REVO Hub by Sixh1 | Bizarre Lineage",
     Logo = "135215559087473",
@@ -138,12 +139,10 @@ FarmsSection:Toggle({
     Callback = function(v) isMain = v end
 })
 
--- Debug: Mostra valores atuais (atualiza manualmente ou via loop se quiser)
 local HoldLabel = SettingsSection:Label("Hold E: 5s")
 local MainLabel = SettingsSection:Label("Wait MAIN: 25s")
 local AltLabel  = SettingsSection:Label("Wait ALT: 25s")
 
--- Sliders SEM callback (usa flags)
 SettingsSection:Slider({
     Name = "Tempo Hold E (s)",
     Flag = "holdESlider",
@@ -162,7 +161,6 @@ SettingsSection:Slider({
     Min = 10, Max = 60, Default = 25, Decimals = 0, Suffix = "s"
 })
 
--- Botão pra atualizar labels (debug)
 SettingsSection:Button({
     Name = "Atualizar Valores (Debug)",
     Callback = function()
@@ -178,7 +176,6 @@ SettingsSection:Button({
     end
 })
 
--- Seus botões de TP (já corrigidos antes)
 SettingsSection:Button({
     Name = "FORÇAR NOVO CICLO AGORA",
     Callback = function()
@@ -213,13 +210,13 @@ Window:SetOpen(true)
 
 Library:Notification({
     Name = "REVO Loaded",
-    Description = "Carregado em " .. string.format("%.2f", os.clock() - LoadingTick) .. "s",
+    Description = "Carregado em " .. string.format("%.2f", os.clock() - LoadingTick) .. "s (Tema vermelho ativado)",
     Duration = 5,
 })
 
 Library:Init()
 
--- Auto-update labels a cada 1s (opcional, pra ver se muda)
+-- Auto-update labels
 task.spawn(function()
     while true do
         task.wait(1)
